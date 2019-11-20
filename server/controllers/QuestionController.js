@@ -5,7 +5,7 @@ class QuestionControllers {
 
   static async findAll(req,res,next){
     try {
-      let questions = await Question.find({}).populate('author','username').sort({updatedAt: 'desc'})
+      let questions = await Question.find({}).populate('author','username').sort({createdAt: 'desc'})
       res.status(200).json(questions)
     } catch (error) {
       next(error)
@@ -78,7 +78,7 @@ class QuestionControllers {
     try {
       let { questionId : _id }= req.params
       let userId = req.loggedUser._id
-      const updateUpVote = await Question.findOneAndUpdate({_id},{$push : {upvote: userId},$pull : {downvote: userId}},{new:true})
+      const updateUpVote = await Question.findOneAndUpdate({_id},{$push : {upvote: userId},$pull : {downvote: userId}},{new:true}).populate({path:'author', select:'username', model: 'User' }).populate({path: 'answers', populate: {path: 'author',  select:'username'}})
       // await Question.updateOne({_id},{$pull : {downvote: userId}})
       res.status(200).json(updateUpVote)
     } catch (error) {
@@ -91,7 +91,7 @@ class QuestionControllers {
       let { questionId : _id }= req.params
       let userId = req.loggedUser._id
       console.log(',masu');
-      const updateUpVote = await Question.findOneAndUpdate({_id},{$pull : {upvote: userId}},{new:true})
+      const updateUpVote = await Question.findOneAndUpdate({_id},{$pull : {upvote: userId}},{new:true}).populate({path:'author', select:'username', model: 'User' }).populate({path: 'answers', populate: {path: 'author',  select:'username'}})
       res.status(200).json(updateUpVote)
     } catch (error) {
       next(error)
@@ -102,7 +102,7 @@ class QuestionControllers {
     try {
       let { questionId : _id }= req.params
       let userId = req.loggedUser._id
-      const updateDownVote = await Question.findOneAndUpdate({_id},{$push : {downvote: userId},$pull : {upvote: userId}},{new: true})
+      const updateDownVote = await Question.findOneAndUpdate({_id},{$push : {downvote: userId},$pull : {upvote: userId}},{new: true}).populate({path:'author', select:'username', model: 'User' }).populate({path: 'answers', populate: {path: 'author',  select:'username'}})
       // await Question.updateOne({_id},{$pull : {upvote: userId}})
       res.status(200).json(updateDownVote)
     } catch (error) {
@@ -114,7 +114,7 @@ class QuestionControllers {
     try {
       let { questionId : _id }= req.params
       let userId = req.loggedUser._id
-      const updateUpVote = await Question.findOneAndUpdate({_id},{$pull : {downvote: userId}},{new: true})
+      const updateUpVote = await Question.findOneAndUpdate({_id},{$pull : {downvote: userId}},{new: true}).populate({path:'author', select:'username', model: 'User' }).populate({path: 'answers', populate: {path: 'author', select:'username'}})
       res.status(200).json(updateUpVote)
     } catch (error) {
       next(error)

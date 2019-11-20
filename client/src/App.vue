@@ -11,6 +11,7 @@ export default {
     if (localStorage.getItem('token')){
       this.$store.commit('SET_LOGIN',true)
       this.$store.dispatch('users/getProfile')
+      console.log('app')
       this.$store.dispatch('answers/getAllAnswers')
       this.$store.dispatch('questions/getAllQuestions')
     } else {

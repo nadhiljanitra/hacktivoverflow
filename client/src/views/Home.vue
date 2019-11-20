@@ -14,6 +14,7 @@
 import Navbar from '@/components/Navbar.vue'
 import Sidebar from '@/components/Sidebar.vue'
 import CardHolder from '@/components/CardHolder.vue'
+import { mapState } from 'vuex'
 
 export default {
   name: 'MyLayout',
@@ -82,6 +83,11 @@ export default {
     this.$store.dispatch('questions/getAllQuestions')
     this.redirectGithub()
     this.showErrGithub()
+  },
+  computed: {
+    ...mapState('questions',[
+      'questions'
+    ])
   }
 }
 </script>

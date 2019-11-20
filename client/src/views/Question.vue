@@ -57,7 +57,6 @@ export default {
   },
   created(){
     let questionId = this.$route.params.questionId
-    // console.log(questionId)
     this.$store.dispatch('questions/getThisQuestion', questionId)
     if(localStorage.getItem('edit')){
       this.edit = true

@@ -22,7 +22,6 @@ export const Question = {
           method: 'get'
         })
           .then(({ data }) => {
-            console.log(data, 'ini all question')
             commit('SET_ALL_QUESTION', data)
             resolve()
           })
@@ -39,7 +38,6 @@ export const Question = {
           method: 'get'
         })
           .then(({ data }) => {
-            console.log(data)
             commit('SET_QUESTION', data)
           })
           .catch((err) => {
@@ -62,7 +60,6 @@ export const Question = {
           }
         })
           .then(({ data }) => {
-            console.log(data)
             resolve()
           })
           .catch((err) => {
@@ -105,10 +102,28 @@ export const Question = {
           }
         })
           .then(({ data }) => {
-            console.log(data)
             return dispatch('getAllQuestions')
           })
           .then(() => {
+            resolve()
+          })
+          .catch((err) => {
+            console.log(err)
+            reject(err)
+          })
+      })
+    },
+    vote ({ commit, dispatch }, payload) {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: `/questions/${payload.type}/${payload.questionId}`,
+          method: 'patch',
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+          .then(({ data }) => {
+            commit('SET_QUESTION', data)
             resolve()
           })
           .catch((err) => {

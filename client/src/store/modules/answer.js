@@ -40,7 +40,6 @@ export const Answer = {
           method: 'get'
         })
           .then(({ data }) => {
-            console.log(data, 'ini answers')
             commit('SET_ALL_ANSWERS', data)
             resolve()
           })
@@ -82,10 +81,28 @@ export const Answer = {
           }
         })
           .then(({ data }) => {
-            console.log(data)
             dispatch('questions/getThisQuestion', payload.questionId, { root: true })
           })
           .then(() => {
+            resolve()
+          })
+          .catch((err) => {
+            console.log(err)
+            reject(err)
+          })
+      })
+    },
+    vote ({ commit, dispatch }, payload) {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: `/answers/${payload.type}/${payload.answerId}`,
+          method: 'patch',
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        })
+          .then(({ data }) => {
+            dispatch('questions/getThisQuestion', payload.questionId, { root: true })
             resolve()
           })
           .catch((err) => {

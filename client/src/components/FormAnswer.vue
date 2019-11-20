@@ -33,6 +33,7 @@ export default {
       this.$store.dispatch('answers/submitAnswer',payload)
         .then(() => {
           this.$q.loading.hide()
+          this.content = ''
             this.$q.notify({
             color: 'green-4',
             textColor: 'white',

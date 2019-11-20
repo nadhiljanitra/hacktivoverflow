@@ -9,7 +9,7 @@
       <q-scroll-area class="fit">
         <q-list padding>
   
-          <q-item v-for="link in links2" :key="link.text" v-ripple clickable :to='link.url' >
+          <q-item v-for="link in links2" :key="link.text" clickable :to='link.url' >
             <q-item-section avatar>
               <q-icon :name="link.icon" />
             </q-item-section>
