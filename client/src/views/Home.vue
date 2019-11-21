@@ -1,10 +1,16 @@
 <template>
   <q-layout view="hHh lpR fFf" class="bg-grey-1">
-    <Navbar @leftDrawerOpens="leftDrawerOpens"></Navbar>
-    <Sidebar :leftDrawerOpen="leftDrawerOpen"></Sidebar>
+    <Navbar @leftDrawerOpens="leftDrawerOpens" @search="setquery"></Navbar>
+    <Sidebar :leftDrawerOpen="leftDrawerOpen" @tagMode="queryTag"></Sidebar>
   <!-- batas header -->
     <q-page-container>
-      <card-holder></card-holder>
+      <div v-if="!tagMode">
+        <card-holder :filter='filter'></card-holder>
+      </div>
+      <div v-if="tagMode">
+        
+        <card-holder :filter='filter' :query='tagQuery' :tagMode='tagMode' @allQuestion="getAllQuestions"></card-holder>
+      </div>
       <!-- <router-view /> -->
     </q-page-container>
   </q-layout>
@@ -25,7 +31,10 @@ export default {
   },
   data(){
     return{
-      leftDrawerOpen: false
+      leftDrawerOpen: false,
+      tagMode: false,
+      tagQuery : '',
+      filter : ''
     }
   },
   methods: {
@@ -79,6 +88,34 @@ export default {
     leftDrawerOpens(){
       this.leftDrawerOpen = !this.leftDrawerOpen
     },
+    queryTag(tag){
+      this.$q.loading.show()
+      this.$store.dispatch('questions/searchByTag', tag)
+        .then(() => {
+          this.$q.loading.hide()
+          this.tagQuery = tag
+          this.tagMode = true
+        })
+        .catch((err) => {
+          this.$q.loading.hide()
+          console.log(err.response.data)
+        })
+    },
+    getAllQuestions(){
+      this.tagMode = false;
+      this.tagQuery = ''
+      this.$q.loading.show()
+      this.$store.dispatch('questions/getAllQuestions')
+        .then(() => {
+        this.$q.loading.hide()
+        })
+        .catch(err=>{
+        this.$q.loading.hide()
+        })
+    },
+    setquery(search){
+      this.filter = search
+    }
   }, created(){
     this.$store.dispatch('questions/getAllQuestions')
     this.redirectGithub()

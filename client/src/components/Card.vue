@@ -10,18 +10,20 @@
           <div>{{answers}}</div>
           <div>answers</div>
         </div>
-        <div class="col-1 stat" >
+        <!-- <div class="col-1 stat" >
           <div>{{views}}</div>
           <div>views</div>
-        </div>
-        <div class="col-9" id="cardss" style="padding: 0px 10px">
+        </div> -->
+        <div class="col-10" id="cardss" style="padding: 0px 10px">
           <div id="head" style="display: flex">
             <a @click.prevent="goToQuestion">{{question.title}} </a>
           </div>
           <div id="foot">
             <div>
               <q-badge color="blue" style="margin-right: 3px" v-for="tag in question.tags" :key="tag.i">
-                {{ tag }}
+                <div id="eachTag" style="cursor:pointer" @click="tagMode(tag)">
+                  {{ tag }}
+                </div>
               </q-badge>
             </div>
             <div>
@@ -44,6 +46,19 @@ export default {
   methods: {
     goToQuestion(){
       this.$router.push({path : `/questions/${this.question._id}/${this.question.slug}`})
+    },
+    tagMode(tag){
+      console.log(tag);
+      this.$q.loading.show()
+      this.$store.dispatch('questions/searchByTag', tag)
+        .then(()=>{
+          this.$q.loading.hide()
+          this.$emit('searchFromChild',tag)
+        })
+        .catch((err) => {
+          this.$q.loading.hide()
+          console.log(err)
+        })
     }
   },
   computed: {

@@ -11,7 +11,7 @@
                   <q-btn :ripple="false" icon="edit" size="xs" @click="edit(answer)">
                     <q-tooltip :delay="500" >Edit</q-tooltip>
                   </q-btn>
-                  <q-btn :ripple="false" color="red" icon="delete" size="xs"  @click="remove(answer)" > 
+                  <q-btn :ripple="false" color="red" icon="delete" size="xs"  @click="confirm = true" > 
                     <q-tooltip :delay="500" >Delete</q-tooltip>
                   </q-btn>
                 </q-btn-group>
@@ -24,6 +24,21 @@
             </div>
           </div>
         </q-card-section>
+        <q-dialog v-model="confirm" persistent>
+          <q-card>
+            <q-card-section class="row items-center">
+              <q-avatar icon="report_problem" color="red" text-color="white" />
+              <div >
+                <span class="q-ml-sm">Are you sure to delete this answer?</span>
+              </div>
+            </q-card-section>
+
+            <q-card-actions align="right">
+              <q-btn flat :no-caps="true" label="Cancel" color="primary" v-close-popup />
+              <q-btn flat label="Yes"  :no-caps="true" color="primary" @click="remove(answer)" v-close-popup />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
       </q-card>
     </div>
   </div>
@@ -35,6 +50,11 @@ import moment from 'moment'
 
 export default {
   name: 'myanswers',
+  data(){
+    return {
+      confirm : false
+    }
+  },
   methods:{
     edit(val){
       console.log(val);
@@ -42,10 +62,17 @@ export default {
       let questionId = val.questionId._id
       let slug = val.questionId.title.split(" ").join("-")
       this.$router.push({path : `/questions/${questionId}/${slug}`})
-      // this.$router.push({path:`/update-answer/${val._id}`})
     },
     remove(val){
+      this.$q.loading.show()
       this.$store.dispatch('answers/removeAnswer',val._id)
+        .then(() => {
+        this.$q.loading.hide()
+        })
+        .catch(err=>{
+          this.$q.loading.hide()
+          console.log(err.response.data)
+        })
     },
      goToQuestion(val){
       let questionId = val.questionId._id

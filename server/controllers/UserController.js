@@ -75,9 +75,11 @@ class UserController {
             }
           }
         } else {
+          console.log('masuk')
           next({status: 403, message : 'Email / password invalid'})
         }
       } catch (error) {
+        console.log(error);
         next(error)  
       }
     }
@@ -190,6 +192,28 @@ class UserController {
         next(error)
       }
     }
+
+  static async updateWatchedTags(req,res,next){
+    try {
+      let { tags } = req.body
+      let {_id} = req.loggedUser
+      let updated = await User.findOneAndUpdate({_id},{wathedTag: tags},{new: true})
+      res.status(200).json(updated)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async removeWatchedTag(req,res,next){
+    try {
+    let { tag } = req.body
+    let {_id} = req.loggedUser
+    let updateUser = await User.findOneAndUpdate({_id},{$pull:{wathedTag: tag}},{new: true})
+    res.status(200).json(updateUser)   
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 module.exports = UserController

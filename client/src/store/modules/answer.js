@@ -106,7 +106,6 @@ export const Answer = {
             resolve()
           })
           .catch((err) => {
-            console.log(err)
             reject(err)
           })
       })

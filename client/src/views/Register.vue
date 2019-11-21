@@ -72,10 +72,28 @@ export default {
         email: this.email,
         password: this.password
       }
+      this.$q.loading.show()
       this.$store.dispatch('register',payload)
         .then(()=>{
-          commit('SET_PROFILE', data.user)
+          this.$store.dispatch('users/getProfile')
+          this.$q.loading.hide()
+              this.$q.notify({
+              color: 'green-4',
+              textColor: 'white',
+              icon: 'done',
+              message: 'Logged in'
+            })
           this.$router.push({path: '/'})
+        })
+        .catch((err)=>{
+          console.log(err.response.data);
+          this.$q.loading.hide()
+          this.$q.notify({
+            color: 'red-4',
+            textColor: 'white',
+            icon: 'warning',
+            message: `${err.response.data.arr.join(' - ')}`
+          })
         })
     },
     jump(){
@@ -89,7 +107,6 @@ export default {
         let id_token = GoogleUser.getAuthResponse().id_token
         this.$store.dispatch('google',id_token)
           .then(_ => {
-            console.log('masuk then google')
             commit('SET_PROFILE', data.user)
             this.$router.push({path: '/'})
             this.$q.loading.hide()
@@ -113,6 +130,7 @@ export default {
       })
       .catch(err=>{
         console.log(err)
+        this.$q.loading.hide()
       })
     },
   }

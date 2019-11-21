@@ -5,7 +5,7 @@
         <div class="text-h6">
           <h6 id="queTitle">{{question.title}}</h6>
           <p  id="queMeta" style="display: flex">Asked: {{asked}} </p>
-          <p  id="queMeta" style="display: flex">{{author}} </p>
+          <p  id="queMeta" style="display: flex">Author: {{author}} </p>
         </div>
       </q-card-section>
 
@@ -53,10 +53,42 @@ export default {
         this.position = 'upvote'
         payload.type = "addUpvote"
         this.$store.dispatch('questions/vote',payload)
+        .then(()=>{
+            // this.$q.notify({
+            //   color: 'green-4',
+            //   textColor: 'white',
+            //   icon: 'done',
+            //   message: 'succeed'
+            // })
+          })
+          .catch(err=>{
+              this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'warning',
+              message: `${err.response.data.message}`
+            })
+          })
       } else if (this.position === 'upvote') {
         this.position = 'netral'
         payload.type = "removeUpvote"
         this.$store.dispatch('questions/vote',payload)
+        .then(()=>{
+            // this.$q.notify({
+            //   color: 'green-4',
+            //   textColor: 'white',
+            //   icon: 'done',
+            //   message: 'succeed'
+            // })
+          })
+          .catch(err=>{
+              this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'warning',
+              message: `${err.response.data.message}`
+            })
+          })
       }
     },
     downvote(){
@@ -68,10 +100,42 @@ export default {
         this.position = 'downvote'
         payload.type = "addDownvote"
         this.$store.dispatch('questions/vote',payload)
+          .then(()=>{
+            // this.$q.notify({
+            //   color: 'green-4',
+            //   textColor: 'white',
+            //   icon: 'done',
+            //   message: 'succeed'
+            // })
+          })
+          .catch(err=>{
+              this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'warning',
+              message: `${err.response.data.message}`
+            })
+          })
       } else if (this.position === 'downvote') {
         this.position = 'netral'
         payload.type = "removeDownvote"
         this.$store.dispatch('questions/vote',payload)
+        .then(()=>{
+            // this.$q.notify({
+            //   color: 'green-4',
+            //   textColor: 'white',
+            //   icon: 'done',
+            //   message: 'succeed'
+            // })
+          })
+          .catch(err=>{
+              this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'warning',
+              message: `${err.response.data.message}`
+            })
+          })
       }
     }
   },
@@ -146,7 +210,7 @@ export default {
 }
 #queMeta{
   margin: 0px;
-  font-size: 10px
+  font-size: 15px
 }
 #queMain{
   padding: 10px 20px

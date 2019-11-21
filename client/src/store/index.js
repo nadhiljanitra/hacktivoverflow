@@ -41,6 +41,7 @@ export default new Vuex.Store({
           })
           .catch((err) => {
             console.log(err)
+            reject(err)
           })
       })
     },
@@ -60,10 +61,11 @@ export default new Vuex.Store({
             localStorage.setItem('token', data.token)
             localStorage.setItem('username', data.username)
             commit('SET_LOGIN', true)
-            resolve()
+            resolve(data)
           })
           .catch((err) => {
-            console.log(err)
+            console.log(err.response.data)
+            reject(err)
           })
       })
     },

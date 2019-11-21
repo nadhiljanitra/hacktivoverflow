@@ -57,7 +57,21 @@ export default {
   },
   created(){
     let questionId = this.$route.params.questionId
+    this.$q.loading.show()
     this.$store.dispatch('questions/getThisQuestion', questionId)
+      .then(() => {
+          this.$q.loading.hide()
+      })
+      .catch(err => {
+        console.log(err.response)
+        this.$q.loading.hide()
+        this.$q.notify({
+            color: 'red-4',
+            textColor: 'white',
+            icon: 'warning',
+            message: `${err.response.data.message}`
+          })
+      })
     if(localStorage.getItem('edit')){
       this.edit = true
     }

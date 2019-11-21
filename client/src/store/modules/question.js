@@ -4,7 +4,9 @@ export const Question = {
   namespaced: true,
   state: {
     questions: [],
-    question: {}
+    question: {},
+    allTags: [],
+    questionsTag: []
   },
   mutations: {
     SET_ALL_QUESTION (state, payload) {
@@ -12,6 +14,18 @@ export const Question = {
     },
     SET_QUESTION (state, payload) {
       state.question = payload
+    },
+    SET_TAGS (state, payload) {
+      let arr = []
+      payload.forEach((el) => {
+        el.tags.forEach(element => {
+          arr.push(element)
+        })
+      })
+      state.allTags = [...new Set(arr)]
+    },
+    SET_QUESTIONS_BY_TAG (state, payload) {
+      state.questionsTag = payload
     }
   },
   actions: {
@@ -22,7 +36,9 @@ export const Question = {
           method: 'get'
         })
           .then(({ data }) => {
+            console.log(data)
             commit('SET_ALL_QUESTION', data)
+            commit('SET_TAGS', data)
             resolve()
           })
           .catch((err) => {
@@ -39,9 +55,11 @@ export const Question = {
         })
           .then(({ data }) => {
             commit('SET_QUESTION', data)
+            resolve()
           })
           .catch((err) => {
             console.log(err)
+            reject(err)
           })
       })
     },
@@ -124,6 +142,24 @@ export const Question = {
         })
           .then(({ data }) => {
             commit('SET_QUESTION', data)
+            resolve()
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    },
+    searchByTag ({ commit, dispatch }, payload) {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: '/questions/search-tag',
+          method: 'post',
+          data: {
+            tag: payload
+          }
+        })
+          .then(({ data }) => {
+            commit('SET_QUESTIONS_BY_TAG', data)
             resolve()
           })
           .catch((err) => {

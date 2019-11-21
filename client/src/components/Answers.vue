@@ -12,12 +12,15 @@
         </div>
         <div id="queMain" class="col-11" >
           <div v-html="answer.content"></div>
+          <div id="foots">
             <div>
               Answered: {{ answered }}
             </div >
             <div>
               {{answer.author.username}}
             </div>
+
+          </div>
         </div>
       </q-card-section>
       <q-separator inset />
@@ -46,10 +49,42 @@ export default {
         this.position = 'upvote'
         payload.type = "addUpvote"
         this.$store.dispatch('answers/vote',payload)
+        .then(()=>{
+            // this.$q.notify({
+            //   color: 'green-4',
+            //   textColor: 'white',
+            //   icon: 'done',
+            //   message: 'succeed'
+            // })
+          })
+          .catch(err=>{
+              this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'warning',
+              message: `${err.response.data.message}`
+            })
+          })
       } else if (this.position === 'upvote') {
         this.position = 'netral'
         payload.type = "removeUpvote"
         this.$store.dispatch('answers/vote',payload)
+        .then(()=>{
+            // this.$q.notify({
+            //   color: 'green-4',
+            //   textColor: 'white',
+            //   icon: 'done',
+            //   message: 'succeed'
+            // })
+          })
+          .catch(err=>{
+              this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'warning',
+              message: `${err.response.data.message}`
+            })
+          })
       }
     },
     downvote(){
@@ -61,10 +96,42 @@ export default {
         this.position = 'downvote'
         payload.type = "addDownvote"
         this.$store.dispatch('answers/vote',payload)
+        .then(()=>{
+            // this.$q.notify({
+            //   color: 'green-4',
+            //   textColor: 'white',
+            //   icon: 'done',
+            //   message: 'succeed'
+            // })
+          })
+          .catch(err=>{
+              this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'warning',
+              message: `${err.response.data.message}`
+            })
+          })
       } else if (this.position === 'downvote') {
         this.position = 'netral'
         payload.type = "removeDownvote"
         this.$store.dispatch('answers/vote',payload)
+        .then(()=>{
+            // this.$q.notify({
+            //   color: 'green-4',
+            //   textColor: 'white',
+            //   icon: 'done',
+            //   message: 'succeed'
+            // })
+          })
+          .catch(err=>{
+              this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'warning',
+              message: `${err.response.data.message}`
+            })
+          })
       }
     }
   },
@@ -126,5 +193,12 @@ export default {
 <style>
 #queMain{
   padding: 10px 20px
+}
+#foots{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 30px;
+  font-size: 12px
 }
 </style>

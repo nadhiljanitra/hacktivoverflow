@@ -12,18 +12,18 @@
               <div>{{question.answers.length}}</div>
               <div>answers</div>
             </div>
-            <div class="col-1 stat" >
+            <!-- <div class="col-1 stat" >
               <div>{{question.views}}</div>
               <div>views</div>
-            </div>
-            <div class="col-9" id="cardss" style="padding: 0px 10px">
+            </div> -->
+            <div class="col-10" id="cardss" style="padding: 0px 10px">
               <div id="head" style="display: flex; flex-direction: row; justify-content:space-between">
                 <a @click.prevent="goToQuestion(question)">{{question.title}} </a>
                 <q-btn-group  >
                   <q-btn :ripple="false" icon="edit" size="xs" @click="edit(question)">
                     <q-tooltip :delay="500" >Edit</q-tooltip>
                   </q-btn>
-                  <q-btn :ripple="false" color="red" icon="delete" size="xs"  @click="remove(question)" > 
+                  <q-btn :ripple="false" color="red" icon="delete" size="xs"  @click="confirm = true" > 
                     <q-tooltip :delay="500" >Delete</q-tooltip>
                   </q-btn>
                 </q-btn-group>
@@ -41,8 +41,26 @@
             </div>
           </div>
         </q-card-section>
+              <q-dialog v-model="confirm" persistent>
+                <q-card>
+                  <q-card-section class="row items-center">
+                    <q-avatar icon="report_problem" color="red" text-color="white" />
+                    <div >
+                      <span class="q-ml-sm">Are you sure to delete this question?</span>
+                    </div>
+                  </q-card-section>
+
+                  <q-card-actions align="right">
+                    <q-btn flat :no-caps="true" label="Cancel" color="primary" v-close-popup />
+                    <q-btn flat label="Yes"  :no-caps="true" color="primary" @click="remove(question)" v-close-popup />
+                  </q-card-actions>
+                </q-card>
+              </q-dialog>
       </q-card>
     </div>
+
+
+
   </div>
 </template>
 
@@ -52,13 +70,26 @@ import moment from 'moment'
 
 export default {
   name: 'myquestions',
+  data(){
+    return{
+      confirm: false
+    }
+  },
   methods:{
     edit(val){
       console.log(val);
       this.$router.push({path: `/update-question/${val._id}`})
     },
     remove(val){
+      this.$q.loading.show()
       this.$store.dispatch('questions/removeQuestion',val._id)
+        .then(() => {
+this.$q.loading.hide()
+        })
+        .catch((err) => {
+          console.log(err.response.data)
+this.$q.loading.hide()
+        })
     },
      goToQuestion(val){
       this.$router.push({path : `/questions/${val._id}/${val.slug}`})
@@ -67,7 +98,15 @@ export default {
   created(){
     this.$emit('setHome',false)
     if(this.questions.length < 1) {
+      this.$q.loading.show()
       this.$store.dispatch('questions/getAllQuestions')
+        .then(() => {
+        this.$q.loading.hide()
+        })
+        .catch((err)=>{
+          console.log(err.response.data)
+        this.$q.loading.hide()
+        })
     }
   },
   computed: {

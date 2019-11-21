@@ -6,8 +6,24 @@
 
 
 <script>
+import io from 'socket.io-client'
+
 export default {
+  data(){
+    return {
+      socket : io.connect('http://localhost:3000/'),
+    }
+  },
   created(){
+    this.socket.on('getNews',(data)=>{
+        // this.numFact = data
+        this.$q.notify({
+            color: 'grey',
+            textColor: 'white',
+            icon: 'help',
+            message: `did you know that ${data}`
+          })
+      })
     if (localStorage.getItem('token')){
       this.$store.commit('SET_LOGIN',true)
       this.$store.dispatch('users/getProfile')

@@ -13,7 +13,7 @@
 
         <q-btn flat no-caps no-wrap class="q-ml-xs" v-if="$q.screen.gt.xs" to="/">
           <q-icon name="code"  size="28px" />
-          <q-toolbar-title shrink class="text-weight-bold">
+          <q-toolbar-title>
             myHacktivOverflow
           </q-toolbar-title>
         </q-btn>
@@ -36,12 +36,6 @@
 
           <div  v-if="login">
             
-            <!-- <q-btn :no-caps="true" color="primary" label="Logout" @click='logout' />
-          <q-btn round flat>
-            <q-avatar size="26px">
-              <img src="https://cdn.quasar.dev/img/boy-avatar.png">
-            </q-avatar> -->
-          <!-- </q-btn> -->
           <q-btn-dropdown
             color="primary"
             :no-caps="true"
@@ -53,10 +47,10 @@
               <div class="column items-center">
                 <q-avatar size="72px" @click="profilePage" style="cursor: pointer">
                   <img src="https://cdn.quasar.dev/img/boy-avatar.png">
-                  <q-tooltip anchor="center left" :delay="500" self="center right" :offset="[10, 10]">Profile page</q-tooltip>
+                  <q-tooltip anchor="center left" :delay="100" self="center right" :offset="[10, 10]">Go to profile page</q-tooltip>
                 </q-avatar>
 
-                <div class="text-subtitle1 q-mt-md q-mb-xs">{{username}}</div>
+                <div class="text-subtitle1 q-mt-md q-mb-xs">{{profile.username}}</div>
 
                 <q-btn
                   :no-caps="true"
@@ -93,6 +87,9 @@ export default {
   computed:{
     ...mapState([
       'login'
+    ]),
+    ...mapState('users', [
+      'profile'
     ])
   },
   methods:{
@@ -100,13 +97,26 @@ export default {
       localStorage.clear()
       this.$store.commit('SET_LOGIN',false)
       this.$store.commit('users/SET_PROFILE',{})
-      this.$router.push({path: '/'})
+      if(this.$route.name !== 'home'){
+        this.$router.push({path: '/'})
+      }
+      this.$q.notify({
+        color: 'green-4',
+        textColor: 'white',
+        icon: 'done',
+        message: 'Logged Out!'
+      })
     },
     leftDrawerOpen(){
       this.$emit('leftDrawerOpens')
     },
     profilePage(){
       this.$router.push({path: '/profile'})
+    }
+  },
+  watch : {
+    search(){
+      this.$emit('search',this.search)
     }
   }
 }

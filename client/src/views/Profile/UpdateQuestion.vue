@@ -129,13 +129,13 @@ export default {
     console.log(obj)
     this.title = obj.title
     this.content = obj.content
-    let temp = {}
     let arr = []
     obj.tags.forEach((el,i)=>{
+    let temp = {}
       temp.key = i
       temp.value = el
-    })
     arr.push(temp)
+    })
     this.choosenTags = arr
   }
 }

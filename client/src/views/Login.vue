@@ -64,10 +64,29 @@ export default {
         email: this.email,
         password: this.password
       }
+      this.$q.loading.show()
       this.$store.dispatch('login',payload)
         .then(()=>{
+          this.email = ''
+          this.password = ''
           this.$store.dispatch('users/getProfile')
           this.$router.push({path: '/'})
+          this.$q.loading.hide()
+              this.$q.notify({
+              color: 'green-4',
+              textColor: 'white',
+              icon: 'done',
+              message: 'Logged in'
+            })
+        })
+        .catch((err) => {
+          this.$q.loading.hide()
+           this.$q.notify({
+            color: 'red-4',
+            textColor: 'white',
+            icon: 'warning',
+            message: `${err.response.data.message}`
+          })
         })
     },
     jump(){
@@ -81,7 +100,6 @@ export default {
         let id_token = GoogleUser.getAuthResponse().id_token
         this.$store.dispatch('google',id_token)
           .then(_ => {
-            console.log('masuk then google')
             this.$store.dispatch('users/getProfile')
             this.$router.push({path: '/'})
             this.$q.loading.hide()
@@ -94,7 +112,6 @@ export default {
           })
           .catch((error)=>{
             this.$q.loading.hide()
-          console.log(error);
           this.$q.notify({
             color: 'red-4',
             textColor: 'white',
@@ -104,6 +121,7 @@ export default {
         })
       })
       .catch(err=>{
+        this.$q.loading.hide()
         console.log(err)
       })
     }

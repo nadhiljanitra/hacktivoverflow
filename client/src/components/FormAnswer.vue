@@ -43,13 +43,23 @@ export default {
         })
         .catch((err) => {
           console.log(err.response);
-          this.$q.loading.hide()
-            this.$q.notify({
-            color: 'green-4',
-            textColor: 'white',
-            icon: 'done',
-            message: `${err.response.data.message}`
-          })
+          if(err.response.data.arr){
+            this.$q.loading.hide()
+              this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'warning',
+              message: `${err.response.data.arr.join(' - ')}`
+            })
+          } else {
+            this.$q.loading.hide()
+              this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'warning',
+              message: `${err.response.data.message}`
+            })
+          }
         })
     }
   }

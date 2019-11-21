@@ -41,18 +41,21 @@
           </template>
           <template v-slot:after>
             <router-view @setHome="setHome"></router-view>
-              <q-card bordered class="my-summary" v-if="home">
+              <q-card bordered class="my-summary" v-if="home" id="cardprofile">
                 <q-card-section>
                   <div class="text-h6">{{username}}</div>
                 </q-card-section>
                 <q-separator inset />
-                <q-card-section>
-                  <p>Joined at: {{profile.createdAt}}</p>
-                  <p>Questions Asked: 4</p>
+                <q-card-section style="display: flex; flex-direction: column; align-items: flex-start">
+                  <p>Joined at: {{createdAt}}</p>
+                  <p>Questions Asked: {{questionCount}}</p>
                   <p>Answered Questions: {{answerCount}} </p>
-                  <p style="cursor: pointer">Watched Tags: {{profile.watchedTag}} 
-                    <q-tooltip :delay="500" >update Watched Tag</q-tooltip>
-                  </p>
+                  <div style="display: flex" >Watched Tags: 
+                    <div  v-for="tag in profile.wathedTag" :key="tag.i">
+                       <q-badge color="primary" style="margin: 0px 4px">{{tag}}</q-badge>
+                    </div>
+                    <!-- {{profile.wathedTag}}  -->
+                  </div>
                 </q-card-section>
               </q-card>
           </template>
@@ -64,6 +67,7 @@
 
 <script>
 import Navbar from '@/components/Navbar.vue'
+import moment from 'moment'
 import { mapState } from 'vuex'
 
 export default {
@@ -108,6 +112,21 @@ export default {
         })
         return count
       }
+    },
+    questionCount(){
+       if (this.questions){
+        let count = 0
+        this.questions.forEach(element => {
+          if (element.author._id == this.profile._id){
+            count++
+          }
+        })
+        return count
+      }
+    },
+    createdAt(){
+      return moment(this.profile.createdAt).format('MMMM Do YYYY')
+      // return moment(this.profile.createdAt).from(new Date())
     }
   },
   created(){
@@ -130,5 +149,9 @@ export default {
 #leftProfile{
   border: 1px solid black;
   padding: 10px
+}
+#cardprofile{
+  width: 60%;
+  margin: 20px auto
 }
 </style>
