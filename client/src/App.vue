@@ -11,7 +11,7 @@ import io from 'socket.io-client'
 export default {
   data(){
     return {
-      socket : io.connect('http://localhost:3000/'),
+      socket : io.connect('https://myhacktivoverflow-server.nadhiljanitra.xyz/'),
     }
   },
   created(){

@@ -19,13 +19,13 @@ const io = require('socket.io')(server)
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
-mongoose.connect('mongodb://localhost:27017/stackOverflow', {
+mongoose.connect(process.env.MONGO_ATLAS, {
   useNewUrlParser: true,
   useUnifiedTopology: true, 
   useCreateIndex: true,
   useFindAndModify: false
 })
-  .then(() => console.log(`conencted on mongodb local`) )
+  .then(() => console.log(`connected on mongodb ATLAS`) )
   .catch((err) => console.log(`${err}`))
 
 
